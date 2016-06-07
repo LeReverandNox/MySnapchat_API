@@ -1,0 +1,20 @@
+{
+    "name" : "my-snapchat-api",
+    "version" : "0.1",
+    "description" : "La vraie API RESTFUL de My_Snapchat, pas comme celle du prestataire douteux.",
+    "author"    : "Rodolphe Laidet <rodolphe.laidet@epitech.eu>",
+    "keywords" : [
+                "snapchat",
+                "api",
+                "campus"
+    ],
+    "license": "MIT",
+    "main" : "server.js",
+    "dependencies" : {
+        "express" : "~4.13.4",
+        "multer" : "~1.1.0",
+        "body-parser" : "~1.15.1",
+        "sequelize" : "~3.23.3",
+        "mysql" : "~2.11.0"
+    }
+}
