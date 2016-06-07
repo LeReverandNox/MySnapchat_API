@@ -1,6 +1,6 @@
 {
     "name" : "my-snapchat-api",
-    "version" : "0.1",
+    "version" : "0.0.1",
     "description" : "La vraie API RESTFUL de My_Snapchat, pas comme celle du prestataire douteux.",
     "author"    : "Rodolphe Laidet <rodolphe.laidet@epitech.eu>",
     "keywords" : [
