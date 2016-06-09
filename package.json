@@ -17,6 +17,7 @@
         "sequelize" : "~3.23.3",
         "mysql" : "~2.11.0",
         "morgan" : "~1.7.0",
-        "jsonwebtoken" : "~7.0.0"
+        "jsonwebtoken" : "~7.0.0",
+        "bcrypt-nodejs" : "~0.0.3"
     }
 }
