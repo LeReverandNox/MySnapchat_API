@@ -21,7 +21,7 @@ module.exports = {
     login: function (req, res) {
         db.User.findOne({
             where: {
-                email: req.body.email.trim()
+                email: req.fields.email
             }
         }).then(function (user) {
             if (user === null) {
@@ -30,7 +30,7 @@ module.exports = {
                     data: null
                 });
             } else {
-                if (!bcrypt.compareSync(req.body.password.trim(), user.get('password'))) {
+                if (!bcrypt.compareSync(req.fields.password, user.get('password'))) {
                     res.status(403).send({
                         error: "Wrong password ! Try again.",
                         data: null
@@ -51,7 +51,29 @@ module.exports = {
         });
     },
     register: function (req, res) {
-        res.send("On essaie de register");
+        db.User.create({
+            email: req.fields.email,
+            password: req.fields.password,
+            username: req.fields.username
+        }).then(function (user) {
+            res.status(200).send({
+                error: false,
+                data: {
+                    id: user.get('id'),
+                    username: user.get('username'),
+                    email: user.get('email'),
+                }
+            });
+        }).catch(function (err) {
+            var errors = [];
+            err.errors.forEach(function (error) {
+                errors.push(error.message);
+            });
+            res.status(200).send({
+                error: errors,
+                data: null
+            });
+        });
     },
     myFriends: function (req, res) {
         res.send("On essaie de recup ses amis");
