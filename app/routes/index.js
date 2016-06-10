@@ -1,12 +1,12 @@
 var fs = require('fs');
-var bodyParser  = require('body-parser');
+var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var emptyValidator = require('../lib/empty-validator');
 
 module.exports = function (app) {
     "use strict";
 
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
     app.use(morgan('dev'));
     app.use(emptyValidator);
