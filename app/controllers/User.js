@@ -1,5 +1,6 @@
 var db = require('../models/');
 var bcrypt = require('bcrypt-nodejs');
+var jwt = require('../lib/jwt');
 
 module.exports = {
     all: function (req, res) {
@@ -48,13 +49,15 @@ module.exports = {
                             data: null
                         });
                     } else {
+                        var token = jwt.newToken(user);
                         res.status(200).send({
                             error: false,
                             data: {
                                 id: user.get('id'),
                                 username: user.get('username'),
                                 email: user.get('email'),
-                            }
+                            },
+                            token: token
                         });
                     }
                 }
