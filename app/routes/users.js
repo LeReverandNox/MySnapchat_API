@@ -1,20 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../controllers/User.js');
-
-var toto = function (req, res, next) {
-    if (req.query.sexe === "bite") {
-        next();
-    } else {
-        res.status(403).send({
-            error: "Bad token",
-            data: null
-        });
-    }
-};
+var jwt = require('../lib/jwt');
 
 module.exports = function (app) {
-    router.get('/', toto, User.all);
+    router.get('/', jwt.checkToken, User.all);
     router.post('/login', User.login);
     router.post('/register', User.register);
     router.get('/friends', User.myFriends);
