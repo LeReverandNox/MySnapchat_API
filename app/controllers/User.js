@@ -19,50 +19,36 @@ module.exports = {
         res.send("On essaie de recup les infos d'un user : " + req.params.user_id);
     },
     login: function (req, res) {
-        var errors = [];
-        if (req.body.email.trim() === "") {
-            errors.push('The email field is empty.');
-        }
-        if (req.body.password.trim() === "") {
-            errors.push('The password field is empty.');
-        }
-        if (errors.length > 0) {
-            res.status(200).send({
-                error: errors,
-                data: null
-            });
-        } else {
-            db.User.findOne({
-                where: {
-                    email: req.body.email.trim()
-                }
-            }).then(function (user) {
-                if (user === null) {
+        db.User.findOne({
+            where: {
+                email: req.body.email.trim()
+            }
+        }).then(function (user) {
+            if (user === null) {
+                res.status(403).send({
+                    error: "Wrong email ! Try again.",
+                    data: null
+                });
+            } else {
+                if (!bcrypt.compareSync(req.body.password.trim(), user.get('password'))) {
                     res.status(403).send({
-                        error: "Wrong email ! Try again.",
+                        error: "Wrong password ! Try again.",
                         data: null
                     });
                 } else {
-                    if (!bcrypt.compareSync(req.body.password.trim(), user.get('password'))) {
-                        res.status(403).send({
-                            error: "Wrong password ! Try again.",
-                            data: null
-                        });
-                    } else {
-                        var token = jwt.newToken(user);
-                        res.status(200).send({
-                            error: false,
-                            data: {
-                                id: user.get('id'),
-                                username: user.get('username'),
-                                email: user.get('email'),
-                            },
-                            token: token
-                        });
-                    }
+                    var token = jwt.newToken(user);
+                    res.status(200).send({
+                        error: false,
+                        data: {
+                            id: user.get('id'),
+                            username: user.get('username'),
+                            email: user.get('email'),
+                        },
+                        token: token
+                    });
                 }
-            });
-        }
+            }
+        });
     },
     register: function (req, res) {
         res.send("On essaie de register");
