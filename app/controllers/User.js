@@ -25,13 +25,13 @@ module.exports = {
             }
         }).then(function (user) {
             if (user === null) {
-                res.status(403).send({
+                res.status(200).send({
                     error: "Wrong email ! Try again.",
                     data: null
                 });
             } else {
                 if (!bcrypt.compareSync(req.fields.password, user.get('password'))) {
-                    res.status(403).send({
+                    res.status(200).send({
                         error: "Wrong password ! Try again.",
                         data: null
                     });
