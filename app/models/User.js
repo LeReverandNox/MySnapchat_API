@@ -95,9 +95,17 @@ module.exports = function (sequelize, DataTypes) {
         underscored: true,
         tableName: 'users',
         classMethods: {
-            // associate: function (models) {
-            //     User.hasMany(models.User);
-            // }
+            associate: function (models) {
+                User.hasMany(models.Snap, {
+                    as: 'sentSnaps',
+                    foreignKey: 'user_id'
+                });
+                User.belongsToMany(models.Snap, {
+                    as: 'receivedSnaps',
+                    through: 'snaps_receivers',
+                    foreignKey: 'user_id'
+                });
+            }
         }
     });
     return User;
