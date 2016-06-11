@@ -4,6 +4,7 @@ var config = require('../../config');
 module.exports = {
     newToken: function (data) {
         var payload = {
+            id: data.id,
             username: data.username,
             email: data.email
         };
@@ -28,6 +29,7 @@ module.exports = {
                         data: null
                     });
                 } else {
+                    req.decoded = decoded;
                     next();
                 }
             });
