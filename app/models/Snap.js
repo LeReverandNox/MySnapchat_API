@@ -50,9 +50,10 @@ module.exports = function (sequelize, DataTypes) {
                     as: 'receivers',
                     through: {
                         "model": models.SnapsReceivers,
-                        "attributs" : ['viewwed']
+                        "attributs" : ['viewed'],
                     },
-                    foreignKey: "snap_id"
+                    foreignKey: "snap_id",
+                    otherKey: "user_id"
                 });
             }
         }

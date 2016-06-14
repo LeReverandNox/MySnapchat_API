@@ -102,8 +102,12 @@ module.exports = function (sequelize, DataTypes) {
                 });
                 User.belongsToMany(models.Snap, {
                     as: 'receivedSnaps',
-                    through: 'snaps_receivers',
-                    foreignKey: 'user_id'
+                    through: {
+                        "model": models.SnapsReceivers,
+                        "attributs" : ['viewed'],
+                    },
+                    foreignKey: 'user_id',
+                    otherKey: 'snap_id'
                 });
             }
         }
