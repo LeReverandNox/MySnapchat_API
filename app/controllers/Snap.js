@@ -75,5 +75,52 @@ module.exports = {
                 });
             }
         });
+    },
+    mySnaps: function (req, res) {
+        'use strict';
+
+        if (req.fields.email !== req.decoded.email) {
+            return res.status(200).send({
+                error: "This is not your email !",
+                data: null
+            });
+        }
+
+        db.Snap.findAll({
+            include: [{
+                model: db.User,
+                as: 'receivers',
+                through: {
+                    where: {
+                        viewed: false
+                    }
+                },
+                where: {
+                    id: 4
+                }
+            }, {
+                model: db.User,
+                as: 'sender'
+            }]
+        }).then(function (snaps) {
+            var snapsToReturn = [];
+            Object.keys(snaps).forEach(function (key) {
+                var oneSnap = {
+                    id: snaps[key].id,
+                    url: 'http://' + req.headers.host + '/uploads/' + snaps[key].imagename,
+                    duration: snaps[key].duration,
+                    sender: {
+                        username: snaps[key].sender.username,
+                        email: snaps[key].sender.email
+                    }
+                };
+                snapsToReturn.push(oneSnap);
+            });
+
+            res.status(200).send({
+                error: false,
+                data: snapsToReturn
+            });
+        });
     }
 };
