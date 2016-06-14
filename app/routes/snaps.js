@@ -9,7 +9,9 @@ var config = require('../../config');
 
 module.exports = function (app) {
     'use strict';
-    router.post('/', multer({dest: config.upload_folder}).any(), jwt.checkToken, fieldsValidator(['email', 'u2', 'temps'], true), snapValidator, Snap.newSnap);
+    router.route('/')
+        .get(jwt.checkToken, fieldsValidator(['email'], true), Snap.mySnaps)
+        .post(multer({dest: config.upload_folder}).any(), jwt.checkToken, fieldsValidator(['email', 'u2', 'temps'], true), snapValidator, Snap.newSnap);
 
     app.use('/api/snaps', router);
 };
