@@ -9,12 +9,13 @@ module.exports = function (app) {
     router.get('/', jwt.checkToken, User.all);
     router.post('/login', fieldsValidator(['email', 'password'], true), User.login);
     router.post('/register', fieldsValidator(['email', 'password', 'username'], true), User.register);
-    router.get('/friends', User.myFriends);
-    router.post('/friends', User.addFriend);
+    router.route('/friends')
+        .get(User.myFriends)
+        .post(User.addFriend);
     router.get('/friends/requests', User.friendRequests);
     router.delete('/friends/:friend_id', User.deleteFriend);
-    router.get('/:user_id', User.oneUser);
-    router.put('/:user_id', User.changePassword);
-
+    router.route('/:user_id')
+        .get(User.oneUser)
+        .put(User.changePassword);
     app.use('/api/users', router);
 };
