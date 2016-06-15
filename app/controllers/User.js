@@ -103,7 +103,52 @@ module.exports = {
         res.send("On essaie de recup ses amis");
     },
     addFriend: function (req, res) {
-        res.send("On essaie d'add un ami");
+        db.User.find({
+            where: {
+                email: req.fields.email
+            }
+        }).then(function (friend) {
+            if (!friend) {
+                return res.status(200).send({
+                    error: "This user doesn't exist.",
+                    data: null
+                });
+            }
+            if (friend.id === req.decoded.id) {
+                return res.status(200).send({
+                    error: "You can't add yourself as a friend.",
+                    data: null
+                });
+            }
+
+
+            db.User.findById(req.decoded.id).then(function (user) {
+                user.isFriendWith(friend)
+                    .then(function () {
+                        user.addFriendWith(friend, {
+                            validated: false
+                        }).then(function () {
+                            return res.status(200).send({
+                                error: false,
+                                data: null
+                            });
+                        });
+                    })
+                    .catch(function (friend) {
+                        if (friend.Friends.validated) {
+                            return res.status(200).send({
+                                error: "This user is already your friend.",
+                                data: null
+                            });
+                        } else {
+                            return res.status(200).send({
+                                error: "You already have a friend request pending with this user.",
+                                data: null
+                            });
+                        }
+                    });
+            });
+        });
     },
     friendRequests: function (req, res) {
         res.send("On essaie de recup ses demandes d'amis");
