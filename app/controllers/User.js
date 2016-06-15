@@ -112,6 +112,33 @@ module.exports = {
         res.send("On essaie de delete un ami : " + req.params.friend_id);
     },
     changePassword: function (req, res) {
-        res.send("On essaie de changer son password");
+        'use strict';
+        if (req.decoded.id.toString() !== req.params.user_id.toString()) {
+            return res.status(200).send({
+                error: "You can't change another's user password ! You scummbag",
+                data: null
+            });
+        }
+
+        db.User.findById(req.params.user_id)
+            .then(function (user) {
+                user.update({
+                    password: req.fields.password
+                }).then(function () {
+                    return res.status(200).send({
+                        error: false,
+                        data: null
+                    });
+                }).catch(function (err) {
+                    var errors = [];
+                    err.errors.forEach(function (error) {
+                        errors.push(error.message);
+                    });
+                    res.status(200).send({
+                        error: errors,
+                        data: null
+                    });
+                });
+            });
     }
 };

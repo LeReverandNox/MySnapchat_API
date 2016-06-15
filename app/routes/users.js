@@ -16,6 +16,6 @@ module.exports = function (app) {
     router.delete('/friends/:friend_id', User.deleteFriend);
     router.route('/:user_id')
         .get(jwt.checkToken, User.oneUser)
-        .put(User.changePassword);
+        .patch(jwt.checkToken, fieldsValidator(['password'], true), User.changePassword);
     app.use('/api/users', router);
 };
