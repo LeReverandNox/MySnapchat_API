@@ -13,5 +13,8 @@ module.exports = function (app) {
         .get(jwt.checkToken, fieldsValidator(['email'], true), Snap.mySnaps)
         .post(multer({dest: config.upload_folder}).any(), jwt.checkToken, fieldsValidator(['email', 'u2', 'temps'], true), snapValidator, Snap.newSnap);
 
+    router.route('/:snap_id')
+        .patch(jwt.checkToken, fieldsValidator(['email'], true), Snap.markAsViewed);
+
     app.use('/api/snaps', router);
 };
