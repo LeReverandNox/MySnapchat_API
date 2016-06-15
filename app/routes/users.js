@@ -15,7 +15,7 @@ module.exports = function (app) {
     router.get('/friends/requests', User.friendRequests);
     router.delete('/friends/:friend_id', User.deleteFriend);
     router.route('/:user_id')
-        .get(User.oneUser)
+        .get(jwt.checkToken, User.oneUser)
         .put(User.changePassword);
     app.use('/api/users', router);
 };

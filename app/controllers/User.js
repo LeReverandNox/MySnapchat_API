@@ -4,6 +4,7 @@ var jwt = require('../lib/jwt');
 
 module.exports = {
     all: function (req, res) {
+        'use strict';
         db.User.findAll({
             attributes: {
                 exclude: ['password', 'created_at', 'updated_at']
@@ -16,9 +17,31 @@ module.exports = {
             });
     },
     oneUser: function (req, res) {
-        res.send("On essaie de recup les infos d'un user : " + req.params.user_id);
+        'use strict';
+        db.User.find({
+            where: {
+                id: req.params.user_id
+            }
+        }).then(function (user) {
+            if (!user) {
+                return res.status(200).send({
+                    error: "This user doesn't exist !",
+                    data: null
+                });
+            }
+
+            return res.status(200).send({
+                error: false,
+                data: {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email
+                }
+            });
+        });
     },
     login: function (req, res) {
+        'use strict';
         db.User.findOne({
             where: {
                 email: req.fields.email
@@ -42,7 +65,7 @@ module.exports = {
                         data: {
                             id: user.get('id'),
                             username: user.get('username'),
-                            email: user.get('email'),
+                            email: user.get('email')
                         },
                         token: token
                     });
@@ -51,6 +74,7 @@ module.exports = {
         });
     },
     register: function (req, res) {
+        'use strict';
         db.User.create({
             email: req.fields.email,
             password: req.fields.password,
