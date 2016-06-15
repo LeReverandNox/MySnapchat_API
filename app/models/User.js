@@ -109,6 +109,66 @@ module.exports = function (sequelize, DataTypes) {
                     foreignKey: 'user_id',
                     otherKey: 'snap_id'
                 });
+                User.belongsToMany(models.User, {
+                    as: {
+                        singular: 'friendWith',
+                        plural: 'friendsWith'
+                    },
+                    through: {
+                        'model': models.Friends,
+                        'attributs': ['validated']
+                    },
+                    foreignKey: 'user_id',
+                    otherKey: 'friend_id'
+                });
+                User.belongsToMany(models.User, {
+                    as: 'withFriends',
+                    through: {
+                        'model': models.Friends,
+                        'attributs': ['validated']
+                    },
+                    foreignKey: 'friend_id',
+                    otherKey: 'user_id'
+                });
+            }
+        },
+        instanceMethods: {
+            isFriendWith: function (user) {
+                var self = this;
+                console.log(self.id, user.id);
+                var promises = [];
+
+                var p1 = new Promise(function (resolve, reject) {
+                    self.getWithFriends({
+                        where: {
+                            id: user.id
+                        }
+                    }).then(function (friends) {
+                        if (friends.length === 0) {
+                            resolve();
+                        } else {
+                            reject(friends[0]);
+                        }
+                    });
+                });
+                promises.push(p1);
+
+                var p2 = new Promise(function (resolve, reject) {
+                    self.getFriendsWith({
+                        where: {
+                            id: user.id
+                        }
+                    }).then(function (friends) {
+                        if (friends.length === 0) {
+                            resolve();
+                        } else {
+                            reject(friends[0]);
+                        }
+                    });
+                });
+                promises.push(p2);
+
+                return Promise.all(promises);
             }
         }
     });
