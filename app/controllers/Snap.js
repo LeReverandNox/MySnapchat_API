@@ -96,7 +96,7 @@ module.exports = {
                     }
                 },
                 where: {
-                    id: 4
+                    id: req.decoded.id
                 }
             }, {
                 model: db.User,
@@ -120,6 +120,50 @@ module.exports = {
             res.status(200).send({
                 error: false,
                 data: snapsToReturn
+            });
+        });
+    },
+    markAsViewed: function (req, res) {
+        'use strict';
+
+        if (req.fields.email !== req.decoded.email) {
+            return res.status(200).send({
+                error: "This is not your email !",
+                data: null
+            });
+        }
+
+        db.Snap.find({
+            include: [{
+                model: db.User,
+                as: 'receivers',
+                through: {
+                    where: {
+                        viewed: false
+                    }
+                },
+                where: {
+                    id: req.decoded.id
+                }
+            }],
+            where: {
+                id: req.params.snap_id
+            }
+        }).then(function (snap) {
+            if (!snap) {
+                return res.status(200).send({
+                    error: "This snap doesn't exist !",
+                    data: null
+                });
+            }
+
+            snap.receivers[0].SnapsReceivers.updateAttributes({
+                viewed: 1
+            }).then(function () {
+                return res.status(200).send({
+                    error: false,
+                    data: null
+                });
             });
         });
     }
