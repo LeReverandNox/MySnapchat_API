@@ -73,10 +73,10 @@ module.exports = function (sequelize, DataTypes) {
             notEmpty: true,
             notNull: true,
             validate: {
-              len: {
-                args: 6,
-                msg: "Your password must be at least 6 characters long."
-              }
+                len: {
+                    args: 6,
+                    msg: "Your password must be at least 6 characters long."
+                }
             }
         },
         password: {
@@ -103,8 +103,8 @@ module.exports = function (sequelize, DataTypes) {
                 User.belongsToMany(models.Snap, {
                     as: 'receivedSnaps',
                     through: {
-                        "model": models.SnapsReceivers,
-                        "attributes" : ['viewed'],
+                        model: models.SnapsReceivers,
+                        attributes: ['viewed']
                     },
                     foreignKey: 'user_id',
                     otherKey: 'snap_id'
@@ -115,8 +115,8 @@ module.exports = function (sequelize, DataTypes) {
                         plural: 'friendsWith'
                     },
                     through: {
-                        'model': models.Friends,
-                        'attributes': ['validated']
+                        model: models.Friends,
+                        attributes: ['validated']
                     },
                     foreignKey: 'user_id',
                     otherKey: 'friend_id'
@@ -124,8 +124,8 @@ module.exports = function (sequelize, DataTypes) {
                 User.belongsToMany(models.User, {
                     as: 'withFriends',
                     through: {
-                        'model': models.Friends,
-                        'attributes': ['validated']
+                        model: models.Friends,
+                        attributes: ['validated']
                     },
                     foreignKey: 'friend_id',
                     otherKey: 'user_id'
@@ -134,7 +134,7 @@ module.exports = function (sequelize, DataTypes) {
             isFriendWith: function (user, maybeFriend) {
                 var promises = [];
 
-                var p1 = new Promise(function (resolve, reject) {
+                var p1 = new Promise(function (resolve, ignore) {
                     User.findOne({
                         include: [{
                             model: User,
@@ -143,7 +143,7 @@ module.exports = function (sequelize, DataTypes) {
                                 id: maybeFriend.id
                             },
                             through: {
-                                attributes: []
+                                attributes: ['validated']
                             }
                         }],
                         where: {
@@ -152,15 +152,15 @@ module.exports = function (sequelize, DataTypes) {
                         attributes: []
                     }).then(function (friend) {
                         if (friend) {
-                            resolve(friend.withFriends);
+                            resolve(friend.withFriends[0]);
                         } else {
                             resolve(friend);
                         }
-                    })
+                    });
                 });
                 promises.push(p1);
 
-                var p2 = new Promise(function (resolve, reject) {
+                var p2 = new Promise(function (resolve, ignore) {
                     User.findOne({
                         include: [{
                             model: User,
@@ -169,7 +169,7 @@ module.exports = function (sequelize, DataTypes) {
                                 id: maybeFriend.id
                             },
                             through: {
-                                attributes: []
+                                attributes: ['validated']
                             }
                         }],
                         where: {
@@ -178,15 +178,31 @@ module.exports = function (sequelize, DataTypes) {
                         attributes: []
                     }).then(function (friend) {
                         if (friend) {
-                            resolve(friend.friendsWith);
+                            resolve(friend.friendsWith[0]);
                         } else {
                             resolve(friend);
                         }
-                    })
+                    });
                 });
                 promises.push(p2);
 
                 return Promise.all(promises);
+            }
+        },
+        instanceMethods: {
+            getFriends: function () {
+                // var friends = [];
+                var self = this;
+
+                this.getWithFriends({
+                    through: {
+                        where: {
+                            validated: true
+                        }
+                    }
+                }).then(function (friends) {
+                    console.log(friends);
+                })
             }
         }
     });
