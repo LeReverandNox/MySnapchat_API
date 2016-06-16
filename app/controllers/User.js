@@ -151,7 +151,29 @@ module.exports = {
         });
     },
     friendRequests: function (req, res) {
-        res.send("On essaie de recup ses demandes d'amis");
+        db.User.findAll({
+            include: [{
+                model: db.User,
+                as: 'withFriends',
+                through: {
+                    where: {
+                        'validated': false
+                    },
+                    attributes: []
+                },
+                attributes: ['id', 'email']
+            }],
+            where: {
+                id: req.decoded.id
+            },
+            attributes: []
+        })
+        .then(function (requests) {
+            res.status(200).send({
+                error: false,
+                data: requests[0].withFriends
+            });
+        });
     },
     deleteFriend: function (req, res) {
         res.send("On essaie de delete un ami : " + req.params.friend_id);
