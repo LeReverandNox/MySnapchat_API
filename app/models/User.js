@@ -130,41 +130,59 @@ module.exports = function (sequelize, DataTypes) {
                     foreignKey: 'friend_id',
                     otherKey: 'user_id'
                 });
-            }
-        },
-        instanceMethods: {
-            isFriendWith: function (user) {
-                var self = this;
-                console.log(self.id, user.id);
+            },
+            isFriendWith: function (user, maybeFriend) {
                 var promises = [];
 
                 var p1 = new Promise(function (resolve, reject) {
-                    self.getWithFriends({
+                    User.findOne({
+                        include: [{
+                            model: User,
+                            as: 'withFriends',
+                            where: {
+                                id: maybeFriend.id
+                            },
+                            through: {
+                                attributes: []
+                            }
+                        }],
                         where: {
                             id: user.id
-                        }
-                    }).then(function (friends) {
-                        if (friends.length === 0) {
-                            resolve();
+                        },
+                        attributes: []
+                    }).then(function (friend) {
+                        if (friend) {
+                            resolve(friend.withFriends);
                         } else {
-                            reject(friends[0]);
+                            resolve(friend);
                         }
-                    });
+                    })
                 });
                 promises.push(p1);
 
                 var p2 = new Promise(function (resolve, reject) {
-                    self.getFriendsWith({
+                    User.findOne({
+                        include: [{
+                            model: User,
+                            as: 'friendsWith',
+                            where: {
+                                id: maybeFriend.id
+                            },
+                            through: {
+                                attributes: []
+                            }
+                        }],
                         where: {
                             id: user.id
-                        }
-                    }).then(function (friends) {
-                        if (friends.length === 0) {
-                            resolve();
+                        },
+                        attributes: []
+                    }).then(function (friend) {
+                        if (friend) {
+                            resolve(friend.friendsWith);
                         } else {
-                            reject(friends[0]);
+                            resolve(friend);
                         }
-                    });
+                    })
                 });
                 promises.push(p2);
 
