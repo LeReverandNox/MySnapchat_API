@@ -100,9 +100,19 @@ module.exports = {
         });
     },
     myFriends: function (req, res) {
-        res.send("On essaie de recup ses amis");
+        'use strict';
+        db.User.findById(req.decoded.id)
+            .then(function (user) {
+                user.getFriends().then(function (friends) {
+                    res.status(200).send({
+                        error: false,
+                        data: friends
+                    });
+                });
+            });
     },
     addFriend: function (req, res) {
+        'use strict';
         db.User.find({
             where: {
                 email: req.fields.email
