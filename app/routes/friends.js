@@ -10,6 +10,6 @@ module.exports = function (app) {
         .get(jwt.checkToken, User.myFriends)
         .post(jwt.checkToken, fieldsValidator(['email'], true), User.addFriend);
     router.get('/requests', jwt.checkToken, User.friendRequests);
-    router.delete('/:friend_id', User.deleteFriend);
+    router.delete('/:friend_id', jwt.checkToken, User.deleteFriend);
     app.use('/api/friends', router);
 };
