@@ -257,5 +257,40 @@ module.exports = {
                     });
                 });
             });
+    },
+    validRequest: function (req, res) {
+        'use strict';
+        db.User.findAll({
+            include: [{
+                model: db.User,
+                as: 'withFriends',
+                through: {
+                    where: {
+                        'validated': false,
+                        'user_id': req.params.user_id
+                    }
+                }
+            }],
+            where: {
+                id: req.decoded.id
+            }
+        })
+        .then(function (requests) {
+            if (!requests[0].withFriends[0]) {
+                return res.status(200).send({
+                    error: "You ain't got any friend request pending with this user.",
+                    data: null
+                });
+            }
+            requests[0].withFriends[0].Friends.updateAttributes({
+                validated: 1
+            }).then(function () {
+                return res.status(200).send({
+                    error: false,
+                    data: null
+                });
+            });
+        });
+    },
     }
 };
