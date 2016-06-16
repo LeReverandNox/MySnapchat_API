@@ -191,18 +191,68 @@ module.exports = function (sequelize, DataTypes) {
         },
         instanceMethods: {
             getFriends: function () {
-                // var friends = [];
+                var arr = [];
+                var promises = [];
                 var self = this;
 
-                this.getWithFriends({
-                    through: {
-                        where: {
-                            validated: true
-                        }
-                    }
-                }).then(function (friends) {
-                    console.log(friends);
-                })
+
+                promises.push(
+                    new Promise(function (resolve, ignore) {
+                        User.findOne({
+                            include: [{
+                                model: User,
+                                as: 'withFriends',
+                                through: {
+                                    where: {
+                                        validated: true
+                                    },
+                                    attributes: []
+                                },
+                                attributes: ['id', 'username', 'email']
+                            }],
+                            where: {
+                                id: self.id
+                            },
+                            attributes: []
+                        }).then(function (friends) {
+                            friends.withFriends.forEach(function (friend) {
+                                arr.push(friend);
+                            });
+                            resolve();
+                        });
+                    })
+                );
+
+                promises.push(
+                    new Promise(function (resolve, ignore) {
+                        User.findOne({
+                            include: [{
+                                model: User,
+                                as: 'friendsWith',
+                                through: {
+                                    where: {
+                                        validated: true
+                                    },
+                                    attributes: []
+                                },
+                                attributes: ['id', 'username', 'email']
+                            }],
+                            where: {
+                                id: self.id
+                            },
+                            attributes: []
+                        }).then(function (friends) {
+                            friends.friendsWith.forEach(function (friend) {
+                                arr.push(friend);
+                            });
+                            resolve();
+                        });
+                    })
+                );
+
+                return Promise.all(promises).then(function () {
+                    return arr;
+                });
             }
         }
     });
