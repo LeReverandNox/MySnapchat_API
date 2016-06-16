@@ -104,7 +104,7 @@ module.exports = function (sequelize, DataTypes) {
                     as: 'receivedSnaps',
                     through: {
                         "model": models.SnapsReceivers,
-                        "attributs" : ['viewed'],
+                        "attributes" : ['viewed'],
                     },
                     foreignKey: 'user_id',
                     otherKey: 'snap_id'
@@ -116,7 +116,7 @@ module.exports = function (sequelize, DataTypes) {
                     },
                     through: {
                         'model': models.Friends,
-                        'attributs': ['validated']
+                        'attributes': ['validated']
                     },
                     foreignKey: 'user_id',
                     otherKey: 'friend_id'
@@ -125,7 +125,7 @@ module.exports = function (sequelize, DataTypes) {
                     as: 'withFriends',
                     through: {
                         'model': models.Friends,
-                        'attributs': ['validated']
+                        'attributes': ['validated']
                     },
                     foreignKey: 'friend_id',
                     otherKey: 'user_id'
