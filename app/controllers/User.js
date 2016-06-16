@@ -3,18 +3,18 @@ var bcrypt = require('bcrypt-nodejs');
 var jwt = require('../lib/jwt');
 
 module.exports = {
-    all: function (req, res) {
+    all: function (ignore, res) {
         'use strict';
         db.User.findAll({
             attributes: {
                 exclude: ['password', 'created_at', 'updated_at']
             }
         }).then(function (users) {
-                res.status(200).send({
-                    error: "false",
-                    data: users
-                });
+            res.status(200).send({
+                error: "false",
+                data: users
             });
+        });
     },
     oneUser: function (req, res) {
         'use strict';
@@ -85,7 +85,7 @@ module.exports = {
                 data: {
                     id: user.get('id'),
                     username: user.get('username'),
-                    email: user.get('email'),
+                    email: user.get('email')
                 }
             });
         }).catch(function (err) {
@@ -151,6 +151,7 @@ module.exports = {
         });
     },
     friendRequests: function (req, res) {
+        'use strict';
         db.User.findAll({
             include: [{
                 model: db.User,
@@ -176,7 +177,42 @@ module.exports = {
         });
     },
     deleteFriend: function (req, res) {
-        res.send("On essaie de delete un ami : " + req.params.friend_id);
+        'use strict';
+        db.User.findById(req.params.friend_id)
+            .then(function (maybeFriend) {
+                if (!maybeFriend) {
+                    return res.status(200).send({
+                        error: "This user doesn't exist.",
+                        data: null
+                    });
+                }
+
+                db.User.findById(req.decoded.id)
+                    .then(function (user) {
+                        db.User.isFriendWith(user, maybeFriend)
+                            .then(function (friend) {
+                                if (!friend[0] && !friend[1]) {
+                                    return res.status(200).send({
+                                        error: "You are not friend with this user.",
+                                        data: null
+                                    });
+                                }
+
+                                var ok = function () {
+                                    return res.status(200).send({
+                                        error: false,
+                                        data: null
+                                    });
+                                };
+                                if (friend[0]) {
+                                    user.removeWithFriend(friend[0]).then(ok);
+                                }
+                                if (friend[1]) {
+                                    user.removeFriendWith(friend[1]).then(ok);
+                                }
+                            });
+                    });
+            });
     },
     changePassword: function (req, res) {
         'use strict';
