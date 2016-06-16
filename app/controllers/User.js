@@ -107,14 +107,14 @@ module.exports = {
             where: {
                 email: req.fields.email
             }
-        }).then(function (friend) {
-            if (!friend) {
+        }).then(function (futureFriend) {
+            if (!futureFriend) {
                 return res.status(200).send({
                     error: "This user doesn't exist.",
                     data: null
                 });
             }
-            if (friend.id === req.decoded.id) {
+            if (futureFriend.id === req.decoded.id) {
                 return res.status(200).send({
                     error: "You can't add yourself as a friend.",
                     data: null
@@ -123,28 +123,32 @@ module.exports = {
 
 
             db.User.findById(req.decoded.id).then(function (user) {
-                user.isFriendWith(friend)
-                    .then(function () {
-                        user.addFriendWith(friend, {
-                            validated: false
-                        }).then(function () {
-                            return res.status(200).send({
-                                error: false,
-                                data: null
-                            });
-                        });
-                    })
-                    .catch(function (friend) {
-                        if (friend.Friends.validated) {
-                            return res.status(200).send({
-                                error: "This user is already your friend.",
-                                data: null
+                db.User.isFriendWith(user, futureFriend).
+                    then(function (friend) {
+                        friend = friend[0] !== null
+                            ? friend[0]
+                            : friend[1];
+                        if (!friend) {
+                            user.addFriendWith(futureFriend, {
+                                validated: false
+                            }).then(function () {
+                                return res.status(200).send({
+                                    error: false,
+                                    data: null
+                                });
                             });
                         } else {
-                            return res.status(200).send({
-                                error: "You already have a friend request pending with this user.",
-                                data: null
-                            });
+                            if (friend.Friends.validated) {
+                                return res.status(200).send({
+                                    error: "This user is already your friend.",
+                                    data: null
+                                });
+                            } else {
+                                return res.status(200).send({
+                                    error: "You already have a friend request pending with this user.",
+                                    data: null
+                                });
+                            }
                         }
                     });
             });
