@@ -16,7 +16,27 @@ module.exports = {
         }
 
         var receiversIds = req.fields.u2.trim().replace(/;+$/, "").replace(/^;+/, "").split(";");
-        if (receiversIds.indexOf(req.decoded.id) !== -1) {
+
+        var hasDuplicateValues = function (arr) {
+            // C'est top Set, merci ES6
+            // Ca permet de créer un nouvel array de valeur uniques à partir d'un array.
+            var set = new Set(arr);
+            console.log(set);
+            if (set.size !== arr.length) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        if (hasDuplicateValues(receiversIds)) {
+            return res.status(200).send({
+                error: ["You can't send a snap to the same user multiple times !"],
+                data: null
+            });
+        }
+
+        if (receiversIds.indexOf(req.decoded.id.toString()) !== -1) {
             return res.status(200).send({
                 error: ["You can't send a snap to yourself !"],
                 data: null
