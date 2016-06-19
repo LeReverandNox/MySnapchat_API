@@ -1,16 +1,18 @@
+/*jslint browser: true node: true this*/
+
 module.exports = function (sequelize, DataTypes) {
     "use strict";
 
     var Snap;
     Snap = sequelize.define("Snap", {
         imagename: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.STRING,
             allowNull: false,
             get: function () {
-                return this.getDataValue('imagename');
+                return this.getDataValue("imagename");
             },
             set: function (imagename) {
-                this.setDataValue('imagename', imagename.toString());
+                this.setDataValue("imagename", imagename.toString());
             }
         },
         duration: {
@@ -30,27 +32,27 @@ module.exports = function (sequelize, DataTypes) {
                 }
             },
             get: function () {
-                return this.getDataValue('duration');
+                return this.getDataValue("duration");
             },
             set: function (duration) {
-                this.setDataValue('duration', duration.toString());
+                this.setDataValue("duration", duration.toString());
             }
         }
     }, {
         timestamps: true,
         underscored: true,
-        tableName: 'snaps',
+        tableName: "snaps",
         classMethods: {
             associate: function (models) {
                 Snap.belongsTo(models.User, {
-                    as: 'sender',
-                    foreignKey: 'user_id'
+                    as: "sender",
+                    foreignKey: "user_id"
                 });
                 Snap.belongsToMany(models.User, {
-                    as: 'receivers',
+                    as: "receivers",
                     through: {
-                        "model": models.SnapsReceivers,
-                        "attributs" : ['viewed'],
+                        model: models.SnapsReceivers,
+                        attributs: ["viewed"]
                     },
                     foreignKey: "snap_id",
                     otherKey: "user_id"
