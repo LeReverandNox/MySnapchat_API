@@ -1,19 +1,19 @@
 /*jslint node: true */
 
 module.exports = function (fields, clean) {
-    'use strict';
+    "use strict";
     return function (req, res, next) {
         var errors = [];
 
         var checkEmpty = function (obj, field) {
             if (obj[field].length === 0) {
-                errors.push('The ' + field + ' field is empty.');
+                errors.push("The " + field + " field is empty.");
             }
         };
         var checkRequired = function (obj) {
             fields.forEach(function (field) {
                 if (!obj.hasOwnProperty(field)) {
-                    errors.push('The ' + field + ' field is required.');
+                    errors.push("The " + field + " field is required.");
                 } else {
                     checkEmpty(obj, field);
                 }
