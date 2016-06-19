@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
             }
         },
         duration: {
-            type: DataTypes.INTEGER(2),
+            type: DataTypes.INTEGER,
             allowNull: false,
             validate: {
                 isInt: {
