@@ -1,8 +1,11 @@
-var jwt = require('jsonwebtoken');
-var config = require('../../config');
+/*jslint node: true */
+
+var jwt = require("jsonwebtoken");
+var config = require("../../config");
 
 module.exports = {
     newToken: function (data) {
+        "use strict";
         var payload = {
             id: data.id,
             username: data.username,
@@ -10,13 +13,14 @@ module.exports = {
         };
 
         var token = jwt.sign(payload, config.secret, {
-                expiresIn: '24h'
+            expiresIn: "24h"
         });
         return token;
     },
     checkToken: function (req, res, next) {
+        "use strict";
         var token = req.body.token || req.query.token;
-        if(!token) {
+        if (!token) {
             res.status(403).send({
                 error: "Token missing !",
                 data: null
