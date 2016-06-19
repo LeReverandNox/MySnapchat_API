@@ -22,14 +22,14 @@ module.exports = {
         var token = req.body.token || req.query.token;
         if (!token) {
             res.status(403).send({
-                error: "Token missing !",
+                error: ["Token missing !"],
                 data: null
             });
         } else {
             jwt.verify(token, config.secret, function (err, decoded) {
                 if (err) {
                     res.status(403).send({
-                        error: "Your token is invalid.",
+                        error: ["Your token is invalid."],
                         data: null
                     });
                 } else {
