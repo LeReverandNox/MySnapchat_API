@@ -1,7 +1,9 @@
+/*jslint browser: true node: true*/
+
 module.exports = {
-    'server_port': PORT,
-    'secret': PASSWORD,
-    'upload_folder': your/upload/folder,
+    "server_port": PORT,
+    "secret": PASSWORD,
+    "upload_folder": your/upload/folder,
     "development": {
         "username": USERNAME,
         "password": PASSWORD,
