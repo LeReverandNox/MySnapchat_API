@@ -2,30 +2,30 @@
 
 module.exports = {
     "server_port": PORT,
-    "secret": PASSWORD,
-    "upload_folder": your/upload/folder,
+    "secret": "SECRETKEY",
+    "upload_folder": "your/upload/folder",
     "development": {
-        "username": USERNAME,
-        "password": PASSWORD,
-        "database": DBNAME,
-        "host": DBHOST,
-        "port": DBPORT,
-        "dialect": DATABASE_TYPE
+        "username": "USERNAME",
+        "password": "PASSWORD",
+        "database": "DBNAME",
+        "host": "DBHOST",
+        "port": "DBPORT",
+        "dialect": "DATABASE_TYPE"
     },
     "test": {
-        "username": USERNAME,
-        "password": PASSWORD,
-        "database": DBNAME,
-        "host": DBHOST,
-        "port": DBPORT,
-        "dialect": DATABASE_TYPE
+        "username": "USERNAME",
+        "password": "PASSWORD",
+        "database": "DBNAME",
+        "host": "DBHOST",
+        "port": "DBPORT",
+        "dialect": "DATABASE_TYPE"
     },
     "production": {
-        "username": USERNAME,
-        "password": PASSWORD,
-        "database": DBNAME,
-        "host": DBHOST,
-        "port": DBPORT,
-        "dialect": DATABASE_TYPE
+        "username": "USERNAME",
+        "password": "PASSWORD",
+        "database": "DBNAME",
+        "host": "DBHOST",
+        "port": "DBPORT",
+        "dialect": "DATABASE_TYPE"
     }
 };
