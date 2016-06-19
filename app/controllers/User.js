@@ -207,24 +207,34 @@ module.exports = {
                     .then(function (user) {
                         db.User.isFriendWith(user, maybeFriend)
                             .then(function (friend) {
-                                if (!friend[0] && !friend[1]) {
+                                var bad = function () {
                                     return res.status(200).send({
                                         error: ["You are not friend with this user."],
                                         data: null
                                     });
-                                }
-
+                                };
                                 var ok = function () {
                                     return res.status(200).send({
                                         error: false,
                                         data: null
                                     });
                                 };
+                                if (!friend[0] && !friend[1]) {
+                                    bad();
+                                }
                                 if (friend[0]) {
-                                    user.removeWithFriend(friend[0]).then(ok);
+                                    if (friend[0].Friends.validated) {
+                                        user.removeWithFriend(friend[0]).then(ok);
+                                    } else {
+                                        bad();
+                                    }
                                 }
                                 if (friend[1]) {
-                                    user.removeFriendWith(friend[1]).then(ok);
+                                    if (friend[1].Friends.validated) {
+                                        user.removeFriendWith(friend[1]).then(ok);
+                                    } else {
+                                        bad();
+                                    }
                                 }
                             });
                     });
