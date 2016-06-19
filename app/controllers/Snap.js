@@ -1,8 +1,11 @@
-var db = require('../models/');
+/*jslint browser: true node: true */
+/*global Promise */
+
+var db = require("../models/");
 
 module.exports = {
     newSnap: function (req, res) {
-        'use strict';
+        "use strict";
         var errors = [];
 
         if (req.fields.email !== req.decoded.email) {
@@ -12,7 +15,7 @@ module.exports = {
             });
         }
 
-        var receiversIds = req.fields.u2.trim().replace(/;+$/, "").replace(/^;+/, "").split(';');
+        var receiversIds = req.fields.u2.trim().replace(/;+$/, "").replace(/^;+/, "").split(";");
         if (receiversIds.indexOf(req.decoded.id) !== -1) {
             return res.status(200).send({
                 error: "You can't send a snap to yourself !",
@@ -77,7 +80,7 @@ module.exports = {
         });
     },
     mySnaps: function (req, res) {
-        'use strict';
+        "use strict";
 
         if (req.fields.email !== req.decoded.email) {
             return res.status(200).send({
@@ -89,7 +92,7 @@ module.exports = {
         db.Snap.findAll({
             include: [{
                 model: db.User,
-                as: 'receivers',
+                as: "receivers",
                 through: {
                     where: {
                         viewed: false
@@ -100,14 +103,14 @@ module.exports = {
                 }
             }, {
                 model: db.User,
-                as: 'sender'
+                as: "sender"
             }]
         }).then(function (snaps) {
             var snapsToReturn = [];
             Object.keys(snaps).forEach(function (key) {
                 var oneSnap = {
                     id: snaps[key].id,
-                    url: 'http://' + req.headers.host + '/uploads/' + snaps[key].imagename,
+                    url: "http://" + req.headers.host + "/uploads/" + snaps[key].imagename,
                     duration: snaps[key].duration,
                     sender: {
                         username: snaps[key].sender.username,
@@ -124,7 +127,7 @@ module.exports = {
         });
     },
     markAsViewed: function (req, res) {
-        'use strict';
+        "use strict";
 
         if (req.fields.email !== req.decoded.email) {
             return res.status(200).send({
@@ -136,7 +139,7 @@ module.exports = {
         db.Snap.find({
             include: [{
                 model: db.User,
-                as: 'receivers',
+                as: "receivers",
                 through: {
                     where: {
                         viewed: false
