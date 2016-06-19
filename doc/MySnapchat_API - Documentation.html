@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySnapchat_API - Documentation</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><h1 id="mysnapchatapi-documentation">MySnapchat_API - Documentation</h1>
+
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#connexion">Connexion</a></li>
+<li><a href="#inscription">Inscription</a></li>
+<li><a href="#send-snap">Envoyer un snap</a></li>
+<li><a href="#get-snaps">Récupérer les snaps’ reçus</a></li>
+<li><a href="#get-users">Récupérer la liste des utilisateurs</a></li>
+<li><a href="#validate-snap">Valider la vue d’un snap’</a></li>
+<li><a href="#get-user">Récupérer les informations d’un utilisateur</a></li>
+<li><a href="#change-password">Modifier son mot de passe</a></li>
+<li><a href="#get-friends">Récupérer sa liste d’amis</a></li>
+<li><a href="#add-friend">Ajouter un ami</a></li>
+<li><a href="#delete-friend">Supprimer un ami</a></li>
+<li><a href="#get-friend-requests">Récupérer ses demandes d’ami</a></li>
+<li><a href="#validate-friend">Valider une demande d’ami</a></li>
+<li><a href="#refuse-friend">Refuser une demande d’ami</a></li>
+</ul>
+
+<h2 id="intro">Intro <a id="intro"></a></h2>
+
+<p>Les réponses de l’API seront au format suivant :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>" :  <span class="hljs-value">// <span class="hljs-literal">false</span> si pas d'erreur</span>, sinon, un tableau des erreurs (strings)
+    "<span class="hljs-attribute">data</span>" : <span class="hljs-value">// Un objet contenant les données demandés</span>, sinon un tableau d'objet en cas de données multiples
+    "<span class="hljs-attribute">token</span>" : <span class="hljs-value">// Pour la connexion seulement
+</span>}</code></pre>
+
+<p>La base de l’URL sera a  adapté en fonction de la configuration votre serveur ! <br>
+Dans les examples de la documentation, nous assumerons que votre API se situe à l’URL : <a href="http://localhost:8080/">http://localhost:8080/</a></p>
+
+
+
+<h2 id="connexion">Connexion <a id="connexion"></a></h2>
+
+
+
+<h4 id="post-httplocalhost8080apiuserslogin">POST <a href="http://localhost:8080/api/users/login">http://localhost:8080/api/users/login</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span></span>, // Votre email
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">"yoursecretpassword"</span> // Votre mot de passe
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+        "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"darealuno"</span></span>,
+        "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tdl.com"</span>
+    </span>}</span>,
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span>
+</span>}</code></pre>
+
+
+
+<h2 id="inscription">Inscription <a id="inscription"></a></h2>
+
+
+
+<h4 id="post-httplocalhost8080apiusersregister">POST <a href="http://localhost:8080/api/users/register">http://localhost:8080/api/users/register</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span></span>, // Votre email
+    "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"darealuno"</span></span>, // Votre nom d'utilisateur
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">"yoursecretpassword"</span> // Votre mot de passe
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">3</span></span>,
+        "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"darealuno"</span></span>,
+        "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span>
+    </span>}
+</span>}</code></pre>
+
+
+
+<h2 id="envoyer-un-snap">Envoyer un snap’ <a id="send-snap"></a></h2>
+
+
+
+<h4 id="post-httplocalhost8080apisnaps">POST <a href="http://localhost:8080/api/snaps">http://localhost:8080/api/snaps</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span></span>, // Votre token
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span></span>, // Votre email
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">"yoursecretpassword"</span></span>, // Votre mot de passe
+    "<span class="hljs-attribute">u2</span>": <span class="hljs-value"><span class="hljs-string">"1;2;3"</span></span>, // Une chaine d'ID des destinataires séparés par le charactère ';'
+    "<span class="hljs-attribute">temps</span>": <span class="hljs-value"><span class="hljs-number">7</span> // La durée du snap exprimée en secondes (entre <span class="hljs-number">1</span> et <span class="hljs-number">10</span>s)
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+</span>}</code></pre>
+
+
+
+<h2 id="récupérer-les-snaps-reçus">Récupérer les snaps’ reçus <a id="get-snaps"></a></h2>
+
+
+
+<h4 id="get-httplocalhost8080apisnaps">GET <a href="http://localhost:8080/api/snaps">http://localhost:8080/api/snaps</a></h4>
+
+<p>Champs attendus :</p>
+
+<p>?<strong>token</strong>=yoursecrettoken&amp;<strong>email</strong>=johndoe@tld.com</p>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
+        {
+            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+            "<span class="hljs-attribute">url</span>": <span class="hljs-value"><span class="hljs-string">"http://localhost:8080/uploads/imagename.jpeg"</span></span>,
+            "<span class="hljs-attribute">duration</span>": <span class="hljs-value"><span class="hljs-number">7</span></span>,
+            "<span class="hljs-attribute">sender</span>": <span class="hljs-value">{
+                "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"johndoe"</span></span>,
+                "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span>
+            </span>}
+        </span>},
+        ...
+    ]
+</span>}</code></pre>
+
+
+
+<h2 id="récupérer-la-liste-des-utilisateurs">Récupérer la liste des utilisateurs <a id="get-users"></a></h2>
+
+
+
+<h4 id="get-httplocalhost8080apiusers">GET <a href="http://localhost:8080/api/users">http://localhost:8080/api/users</a></h4>
+
+<p>Champs attendus :</p>
+
+<p>?<strong>token</strong>=yoursecrettoken</p>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
+        {
+            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+            "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span></span>,
+            "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"johndoe"</span>
+        </span>},
+        ...
+    ]
+</span>}</code></pre>
+
+
+
+<h2 id="valider-la-vue-dun-snap">Valider la vue d’un snap’ <a id="validate-snap"></a></h2>
+
+
+
+<h4 id="patch-httplocalhost8080apisnapssnapid">PATCH <a href="http://localhost:8080/api/snaps/:snap_id">http://localhost:8080/api/snaps/:snap_id</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">:snap_id : L'id du snap à valider
+{
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span></span>, // Votre token
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span> // Votre email
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+</span>}</code></pre>
+
+
+
+<h2 id="récupérer-les-informations-dun-utilisateur">Récupérer les informations d’un utilisateur <a id="get-user"></a></h2>
+
+
+
+<h4 id="get-httplocalhost8080apiusersuserid">GET <a href="http://localhost:8080/api/users/:user_id">http://localhost:8080/api/users/:user_id</a></h4>
+
+<p>Champs attendus :</p>
+
+<p>?<strong>token</strong>=yoursecrettoken</p>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">:user_id : L'id de l'utilisateur à récupérer
+{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value">{
+        "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+        "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"johndoe"</span></span>,
+        "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span>
+    </span>}
+</span>}</code></pre>
+
+
+
+<h2 id="modifier-son-mot-de-passe">Modifier son mot de passe <a id="change-password"></a></h2>
+
+
+
+<h4 id="patch-httplocalhost8080apiusersuserid">PATCH <a href="http://localhost:8080/api/users/:user_id">http://localhost:8080/api/users/:user_id</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">:user_id : Votre id
+
+{
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span></span>, // Votre token
+    "<span class="hljs-attribute">password</span>": <span class="hljs-value"><span class="hljs-string">"yournewpassword"</span> // Votre nouveau mot de passe
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+</span>}</code></pre>
+
+
+
+<h2 id="récupérer-sa-liste-damis">Récupérer sa liste d’amis <a id="get-friends"></a></h2>
+
+
+
+<h4 id="get-httplocalhost8080apifriends">GET <a href="http://localhost:8080/api/friends">http://localhost:8080/api/friends</a></h4>
+
+<p>Champs attendus :</p>
+
+<p>?<strong>token</strong>=yoursecrettoken</p>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
+        {
+            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+            "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"johndoe"</span></span>,
+            "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span>
+        </span>},
+        ...
+    ]
+</span>}</code></pre>
+
+
+
+<h2 id="ajouter-un-ami">Ajouter un ami <a id="add-friend"></a></h2>
+
+
+
+<h4 id="post-httplocalhost8080apifriends">POST <a href="http://localhost:8080/api/friends/">http://localhost:8080/api/friends/</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span></span>, // Votre token
+    "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"yourfriendemail"</span> // L'email de l'ami que vous souhaitez ajouter
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+</span>}</code></pre>
+
+
+
+<h2 id="supprimer-un-ami">Supprimer un ami <a id="delete-friend"></a></h2>
+
+
+
+<h4 id="delete-httplocalhost8080apifriendsuserid">DELETE <a href="http://localhost:8080/api/friends/:user_id">http://localhost:8080/api/friends/:user_id</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">:user_id : l'id de l'ami à supprimer
+{
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span> // Votre token
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+</span>}</code></pre>
+
+
+
+<h2 id="récupérer-ses-demandes-dami">Récupérer ses demandes d’ami <a id="get-friend-requests"></a></h2>
+
+
+
+<h4 id="get-httplocalhost8080apifriendsrequests">GET <a href="http://localhost:8080/api/friends/requests">http://localhost:8080/api/friends/requests</a></h4>
+
+<p>Champs attendus :</p>
+
+<p>?<strong>token</strong>=yoursecrettoken</p>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value">[
+        {
+            "<span class="hljs-attribute">id</span>": <span class="hljs-value"><span class="hljs-number">1</span></span>,
+            "<span class="hljs-attribute">username</span>": <span class="hljs-value"><span class="hljs-string">"johndoe"</span></span>,
+            "<span class="hljs-attribute">email</span>": <span class="hljs-value"><span class="hljs-string">"johndoe@tld.com"</span>
+        </span>},
+        ...
+    ]
+</span>}</code></pre>
+
+
+
+<h2 id="valider-une-demande-dami">Valider une demande d’ami <a id="validate-friend"></a></h2>
+
+
+
+<h4 id="patch-httplocalhost8080apifriendsrequestsuserid">PATCH <a href="http://localhost:8080/api/friends/requests/:user_id">http://localhost:8080/api/friends/requests/:user_id</a></h4>
+
+<p>Champs attendus :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">:user_id : l'id de l'ami à valider
+{
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span> // Votre token
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+</span>}</code></pre>
+
+
+
+<h2 id="refuser-une-demande-dami">Refuser une demande d’ami <a id="refuse-friend"></a></h2>
+
+
+
+<h4 id="delete-httplocalhost8080apifriendsrequestsuserid">DELETE <a href="http://localhost:8080/api/friends/requests/:user_id">http://localhost:8080/api/friends/requests/:user_id</a></h4>
+
+<p>Champs attendus :</p>
+
+<pre class="prettyprint"><code class="language-json hljs ">:user_id : l'id de l'ami à refuser
+{
+    "<span class="hljs-attribute">token</span>": <span class="hljs-value"><span class="hljs-string">"yoursecrettoken"</span> // Votre token
+</span>}</code></pre>
+
+<p>Retourne :</p>
+
+<pre class="prettyprint"><code class="language-json hljs ">{
+    "<span class="hljs-attribute">error</span>": <span class="hljs-value"><span class="hljs-literal">false</span></span>,
+    "<span class="hljs-attribute">data</span>": <span class="hljs-value"><span class="hljs-literal">null</span>
+</span>}</code></pre></div></body>
+</html>
