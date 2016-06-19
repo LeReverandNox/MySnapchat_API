@@ -1,13 +1,16 @@
-var db = require('../models/');
-var bcrypt = require('bcrypt-nodejs');
-var jwt = require('../lib/jwt');
+/*jslint browser: true node: true */
+/*global Promise */
+
+var db = require("../models/");
+var bcrypt = require("bcrypt-nodejs");
+var jwt = require("../lib/jwt");
 
 module.exports = {
     all: function (ignore, res) {
-        'use strict';
+        "use strict";
         db.User.findAll({
             attributes: {
-                exclude: ['password', 'created_at', 'updated_at']
+                exclude: ["password", "created_at", "updated_at"]
             }
         }).then(function (users) {
             res.status(200).send({
@@ -17,7 +20,7 @@ module.exports = {
         });
     },
     oneUser: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.find({
             where: {
                 id: req.params.user_id
@@ -41,7 +44,7 @@ module.exports = {
         });
     },
     login: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.findOne({
             where: {
                 email: req.fields.email
@@ -53,7 +56,7 @@ module.exports = {
                     data: null
                 });
             } else {
-                if (!bcrypt.compareSync(req.fields.password, user.get('password'))) {
+                if (!bcrypt.compareSync(req.fields.password, user.get("password"))) {
                     res.status(200).send({
                         error: "Wrong password ! Try again.",
                         data: null
@@ -63,9 +66,9 @@ module.exports = {
                     res.status(200).send({
                         error: false,
                         data: {
-                            id: user.get('id'),
-                            username: user.get('username'),
-                            email: user.get('email')
+                            id: user.get("id"),
+                            username: user.get("username"),
+                            email: user.get("email")
                         },
                         token: token
                     });
@@ -74,7 +77,7 @@ module.exports = {
         });
     },
     register: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.create({
             email: req.fields.email,
             password: req.fields.password,
@@ -83,9 +86,9 @@ module.exports = {
             res.status(200).send({
                 error: false,
                 data: {
-                    id: user.get('id'),
-                    username: user.get('username'),
-                    email: user.get('email')
+                    id: user.get("id"),
+                    username: user.get("username"),
+                    email: user.get("email")
                 }
             });
         }).catch(function (err) {
@@ -100,7 +103,7 @@ module.exports = {
         });
     },
     myFriends: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.findById(req.decoded.id)
             .then(function (user) {
                 user.getFriends().then(function (friends) {
@@ -112,7 +115,7 @@ module.exports = {
             });
     },
     addFriend: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.find({
             where: {
                 email: req.fields.email
@@ -133,8 +136,8 @@ module.exports = {
 
 
             db.User.findById(req.decoded.id).then(function (user) {
-                db.User.isFriendWith(user, futureFriend).
-                    then(function (friend) {
+                db.User.isFriendWith(user, futureFriend)
+                    .then(function (friend) {
                         friend = friend[0] !== null
                             ? friend[0]
                             : friend[1];
@@ -165,25 +168,24 @@ module.exports = {
         });
     },
     friendRequests: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.findAll({
             include: [{
                 model: db.User,
-                as: 'withFriends',
+                as: "withFriends",
                 through: {
                     where: {
-                        'validated': false
+                        validated: false
                     },
                     attributes: []
                 },
-                attributes: ['id', 'email']
+                attributes: ["id", "email"]
             }],
             where: {
                 id: req.decoded.id
             },
             attributes: []
-        })
-        .then(function (requests) {
+        }).then(function (requests) {
             res.status(200).send({
                 error: false,
                 data: requests[0].withFriends
@@ -191,7 +193,7 @@ module.exports = {
         });
     },
     deleteFriend: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.findById(req.params.friend_id)
             .then(function (maybeFriend) {
                 if (!maybeFriend) {
@@ -229,7 +231,7 @@ module.exports = {
             });
     },
     changePassword: function (req, res) {
-        'use strict';
+        "use strict";
         if (req.decoded.id.toString() !== req.params.user_id.toString()) {
             return res.status(200).send({
                 error: "You can't change another's user password ! You scummbag",
@@ -259,23 +261,22 @@ module.exports = {
             });
     },
     validRequest: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.findAll({
             include: [{
                 model: db.User,
-                as: 'withFriends',
+                as: "withFriends",
                 through: {
                     where: {
-                        'validated': false,
-                        'user_id': req.params.user_id
+                        validated: false,
+                        user_id: req.params.user_id
                     }
                 }
             }],
             where: {
                 id: req.decoded.id
             }
-        })
-        .then(function (requests) {
+        }).then(function (requests) {
             if (!requests[0].withFriends[0]) {
                 return res.status(200).send({
                     error: "You ain't got any friend request pending with this user.",
@@ -293,36 +294,34 @@ module.exports = {
         });
     },
     denyRequest: function (req, res) {
-        'use strict';
+        "use strict";
         db.User.findAll({
             include: [{
                 model: db.User,
-                as: 'withFriends',
+                as: "withFriends",
                 through: {
                     where: {
-                        'validated': false,
-                        'user_id': req.params.user_id
+                        validated: false,
+                        user_id: req.params.user_id
                     }
                 }
             }],
             where: {
                 id: req.decoded.id
             }
-        })
-        .then(function (requests) {
+        }).then(function (requests) {
             if (!requests[0].withFriends[0]) {
                 return res.status(200).send({
                     error: "You ain't got any friend request pending with this user.",
                     data: null
                 });
             }
-            requests[0].removeWithFriend(requests[0].withFriends[0])
-                .then(function () {
-                    return res.status(200).send({
-                        error: false,
-                        data: null
-                    });
+            requests[0].removeWithFriend(requests[0].withFriends[0]).then(function () {
+                return res.status(200).send({
+                    error: false,
+                    data: null
                 });
+            });
         });
     }
 };
