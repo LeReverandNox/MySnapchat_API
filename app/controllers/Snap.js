@@ -10,7 +10,7 @@ module.exports = {
 
         if (req.fields.email !== req.decoded.email) {
             return res.status(200).send({
-                error: "This is not your email !",
+                error: ["This is not your email !"],
                 data: null
             });
         }
@@ -18,7 +18,7 @@ module.exports = {
         var receiversIds = req.fields.u2.trim().replace(/;+$/, "").replace(/^;+/, "").split(";");
         if (receiversIds.indexOf(req.decoded.id) !== -1) {
             return res.status(200).send({
-                error: "You can't send a snap to yourself !",
+                error: ["You can't send a snap to yourself !"],
                 data: null
             });
         }
@@ -84,7 +84,7 @@ module.exports = {
 
         if (req.fields.email !== req.decoded.email) {
             return res.status(200).send({
-                error: "This is not your email !",
+                error: ["This is not your email !"],
                 data: null
             });
         }
@@ -131,7 +131,7 @@ module.exports = {
 
         if (req.fields.email !== req.decoded.email) {
             return res.status(200).send({
-                error: "This is not your email !",
+                error: ["This is not your email !"],
                 data: null
             });
         }
@@ -155,7 +155,7 @@ module.exports = {
         }).then(function (snap) {
             if (!snap) {
                 return res.status(200).send({
-                    error: "This snap doesn't exist !",
+                    error: ["This snap doesn't exist !"],
                     data: null
                 });
             }
