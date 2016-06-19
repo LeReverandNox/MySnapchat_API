@@ -1,56 +1,58 @@
-'use strict';
+/*jslint browser: true node: true*/
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
+        "use strict";
         return [
             queryInterface.createTable(
-                'users',
+                "users",
                 {
-                    'id': {
+                    "id": {
                         type: Sequelize.INTEGER,
                         primaryKey: true,
                         autoIncrement: true
                     },
-                    'created_at': {
+                    "created_at": {
                         type: Sequelize.DATE
                     },
-                    'updated_at': {
+                    "updated_at": {
                         type: Sequelize.DATE
                     },
-                    'username': {
-                        type: Sequelize.STRING(30),
+                    "username": {
+                        type: new Sequelize.STRING(30),
                         allowNull: false
                     },
-                    'email': {
+                    "email": {
                         type: Sequelize.STRING,
                         allowNull: false
                     },
-                    'password': {
+                    "password": {
                         type: Sequelize.STRING,
                         allowNull: false
-                    },
+                    }
                 }
             ),
             queryInterface.addIndex(
-                'users',
-                ['username'],
+                "users",
+                ["username"],
                 {
-                    indexName: 'username',
-                    indicesType: 'UNIQUE'
+                    indexName: "username",
+                    indicesType: "UNIQUE"
                 }
             ),
             queryInterface.addIndex(
-                'users',
-                ['email'],
+                "users",
+                ["email"],
                 {
-                    indexName: 'email',
-                    indicesType: 'UNIQUE'
+                    indexName: "email",
+                    indicesType: "UNIQUE"
                 }
             )
         ];
     },
 
-    down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('users');
+    down: function (queryInterface, ignore) {
+        "use strict";
+        return queryInterface.dropTable("users");
     }
 };
