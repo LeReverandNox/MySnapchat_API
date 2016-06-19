@@ -14,7 +14,7 @@ module.exports = {
             }
         }).then(function (users) {
             res.status(200).send({
-                error: "false",
+                error: false,
                 data: users
             });
         });
@@ -28,7 +28,7 @@ module.exports = {
         }).then(function (user) {
             if (!user) {
                 return res.status(200).send({
-                    error: "This user doesn't exist !",
+                    error: ["This user doesn't exist !"],
                     data: null
                 });
             }
@@ -52,13 +52,13 @@ module.exports = {
         }).then(function (user) {
             if (user === null) {
                 res.status(200).send({
-                    error: "Wrong email ! Try again.",
+                    error: ["Wrong email ! Try again."],
                     data: null
                 });
             } else {
                 if (!bcrypt.compareSync(req.fields.password, user.get("password"))) {
                     res.status(200).send({
-                        error: "Wrong password ! Try again.",
+                        error: ["Wrong password ! Try again."],
                         data: null
                     });
                 } else {
@@ -123,13 +123,13 @@ module.exports = {
         }).then(function (futureFriend) {
             if (!futureFriend) {
                 return res.status(200).send({
-                    error: "This user doesn't exist.",
+                    error: ["This user doesn't exist."],
                     data: null
                 });
             }
             if (futureFriend.id === req.decoded.id) {
                 return res.status(200).send({
-                    error: "You can't add yourself as a friend.",
+                    error: ["You can't add yourself as a friend."],
                     data: null
                 });
             }
@@ -153,12 +153,12 @@ module.exports = {
                         } else {
                             if (friend.Friends.validated) {
                                 return res.status(200).send({
-                                    error: "This user is already your friend.",
+                                    error: ["This user is already your friend."],
                                     data: null
                                 });
                             } else {
                                 return res.status(200).send({
-                                    error: "You already have a friend request pending with this user.",
+                                    error: ["You already have a friend request pending with this user."],
                                     data: null
                                 });
                             }
@@ -179,7 +179,7 @@ module.exports = {
                     },
                     attributes: []
                 },
-                attributes: ["id", "email"]
+                attributes: ["id", "email", "username"]
             }],
             where: {
                 id: req.decoded.id
@@ -198,7 +198,7 @@ module.exports = {
             .then(function (maybeFriend) {
                 if (!maybeFriend) {
                     return res.status(200).send({
-                        error: "This user doesn't exist.",
+                        error: ["This user doesn't exist."],
                         data: null
                     });
                 }
@@ -209,7 +209,7 @@ module.exports = {
                             .then(function (friend) {
                                 if (!friend[0] && !friend[1]) {
                                     return res.status(200).send({
-                                        error: "You are not friend with this user.",
+                                        error: ["You are not friend with this user."],
                                         data: null
                                     });
                                 }
@@ -234,7 +234,7 @@ module.exports = {
         "use strict";
         if (req.decoded.id.toString() !== req.params.user_id.toString()) {
             return res.status(200).send({
-                error: "You can't change another's user password ! You scummbag",
+                error: ["You can't change another's user password ! You scummbag"],
                 data: null
             });
         }
@@ -279,7 +279,7 @@ module.exports = {
         }).then(function (requests) {
             if (!requests[0].withFriends[0]) {
                 return res.status(200).send({
-                    error: "You ain't got any friend request pending with this user.",
+                    error: ["You ain't got any friend request pending with this user."],
                     data: null
                 });
             }
@@ -312,7 +312,7 @@ module.exports = {
         }).then(function (requests) {
             if (!requests[0].withFriends[0]) {
                 return res.status(200).send({
-                    error: "You ain't got any friend request pending with this user.",
+                    error: ["You ain't got any friend request pending with this user."],
                     data: null
                 });
             }
