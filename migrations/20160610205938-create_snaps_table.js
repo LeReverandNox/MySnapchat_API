@@ -1,30 +1,31 @@
-'use strict';
+/*jslint browser: true node: true*/
 
 module.exports = {
     up: function (queryInterface, Sequelize) {
+        "use strict";
         return queryInterface.createTable(
-            'snaps',
+            "snaps",
             {
-                'id': {
+                "id": {
                     type: Sequelize.INTEGER,
                     primaryKey: true,
                     autoIncrement: true
                 },
-                'created_at': {
+                "created_at": {
                     type: Sequelize.DATE
                 },
-                'updated_at': {
+                "updated_at": {
                     type: Sequelize.DATE
                 },
-                'user_id': {
+                "user_id": {
                     type: Sequelize.INTEGER,
                     allowNull: false
                 },
-                'imagename': {
+                "imagename": {
                     type: Sequelize.STRING,
                     allowNull: false
                 },
-                'duration': {
+                "duration": {
                     type: Sequelize.INTEGER,
                     allowNull: false
                 }
@@ -32,7 +33,8 @@ module.exports = {
         );
     },
 
-    down: function (queryInterface, Sequelize) {
-        return queryInterface.dropTable('snaps');
+    down: function (queryInterface, ignore) {
+        "use strict";
+        return queryInterface.dropTable("snaps");
     }
 };
