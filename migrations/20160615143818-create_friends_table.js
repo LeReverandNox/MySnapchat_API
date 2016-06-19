@@ -1,38 +1,40 @@
-'use strict';
+/*jslint browser: true node: true*/
 
 module.exports = {
-  up: function (queryInterface, Sequelize) {
+    up: function (queryInterface, Sequelize) {
+        "use strict";
         return queryInterface.createTable(
-            'friends',
+            "friends",
             {
-                'id': {
+                "id": {
                     type: Sequelize.INTEGER,
                     primaryKey: true,
                     autoIncrement: true
                 },
-                'created_at': {
+                "created_at": {
                     type: Sequelize.DATE
                 },
-                'updated_at': {
+                "updated_at": {
                     type: Sequelize.DATE
                 },
-                'user_id': {
+                "user_id": {
                     type: Sequelize.INTEGER,
                     allowNull: false
                 },
-                'friend_id': {
+                "friend_id": {
                     type: Sequelize.INTEGER,
                     allowNull: false
                 },
-                'validated': {
+                "validated": {
                     type: Sequelize.BOOLEAN,
                     allowNull: false
                 }
             }
         );
-  },
+    },
 
-  down: function (queryInterface, Sequelize) {
-      return queryInterface.dropTable('friends');
-  }
+    down: function (queryInterface, ignore) {
+        "use strict";
+        return queryInterface.dropTable("friends");
+    }
 };
