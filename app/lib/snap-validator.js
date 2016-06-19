@@ -1,7 +1,9 @@
-var fs = require('fs');
+/*jslint node: true */
+
+var fs = require("fs");
 
 module.exports = function (req, res, next) {
-    'use strict';
+    "use strict";
     var errors = [];
 
     if (req.files[0] !== undefined) {
@@ -13,13 +15,13 @@ module.exports = function (req, res, next) {
                 file.filename += ext;
                 req.file = file;
             } else {
-                errors.push('Wrong image format (expected : jpeg).');
+                errors.push("Wrong image format (expected : jpeg).");
             }
         } else {
-            errors.push('Wrong fileKey (expected : file).');
+            errors.push("Wrong fileKey (expected : file).");
         }
     } else {
-        errors.push('Please add a JPEG image to your snap.');
+        errors.push("Please add a JPEG image to your snap.");
     }
 
     if (errors.length > 0) {
