@@ -21,7 +21,6 @@ module.exports = {
             // C'est top Set, merci ES6
             // Ca permet de créer un nouvel array de valeur uniques à partir d'un array.
             var set = new Set(arr);
-            console.log(set);
             if (set.size !== arr.length) {
                 return true;
             } else {
