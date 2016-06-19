@@ -1,5 +1,5 @@
 /*jslint browser: true node: true */
-/*global Promise */
+/*global Promise Set */
 
 var db = require("../models/");
 
