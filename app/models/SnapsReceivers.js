@@ -1,3 +1,5 @@
+/*jslint browser: true node: true this*/
+
 module.exports = function (sequelize, DataTypes) {
     "use strict";
 
@@ -7,16 +9,16 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.BOOLEAN,
             allowNull: false,
             get: function () {
-                return this.getDataValue('viewed');
+                return this.getDataValue("viewed");
             },
             set: function (viewed) {
-                this.setDataValue('viewed', viewed.toString());
+                this.setDataValue("viewed", viewed.toString());
             }
         }
     }, {
         timestamps: true,
         underscored: true,
-        tableName: 'snaps_receivers'
+        tableName: "snaps_receivers"
     });
     return SnapsReceivers;
 };
