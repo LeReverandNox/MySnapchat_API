@@ -3,7 +3,7 @@
 module.exports = {
     "server_port": PORT,
     "secret": "SECRETKEY",
-    "upload_folder": "your/upload/folder",
+    "upload_folder": "your/upload/folder/",
     "development": {
         "username": "USERNAME",
         "password": "PASSWORD",
