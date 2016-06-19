@@ -1,4 +1,7 @@
-var bcrypt = require('bcrypt-nodejs');
+/*jslint browser: true node: true this*/
+/*global Promise */
+
+var bcrypt = require("bcrypt-nodejs");
 
 module.exports = function (sequelize, DataTypes) {
     "use strict";
@@ -6,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
     var User;
     User = sequelize.define("User", {
         username: {
-            type: DataTypes.STRING(30),
+            type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 len: {
@@ -21,7 +24,7 @@ module.exports = function (sequelize, DataTypes) {
                     User.find({where: {username: value}})
                         .then(function (user) {
                             if (user && self.id !== user.id) {
-                                return next('This username is already in use.');
+                                return next("This username is already in use.");
                             }
                             return next();
                         })
@@ -31,10 +34,10 @@ module.exports = function (sequelize, DataTypes) {
                 }
             },
             get: function () {
-                return this.getDataValue('username');
+                return this.getDataValue("username");
             },
             set: function (username) {
-                this.setDataValue('username', username.toString().toLowerCase().trim());
+                this.setDataValue("username", username.toString().toLowerCase().trim());
             }
         },
         email: {
@@ -52,7 +55,7 @@ module.exports = function (sequelize, DataTypes) {
                     User.find({where: {email: value}})
                         .then(function (user) {
                             if (user && self.id !== user.id) {
-                                return next('This email is already in use.');
+                                return next("This email is already in use.");
                             }
                             return next();
                         })
@@ -62,10 +65,10 @@ module.exports = function (sequelize, DataTypes) {
                 }
             },
             get: function () {
-                return this.getDataValue('email');
+                return this.getDataValue("email");
             },
             set: function (email) {
-                this.setDataValue('email', email.toString().toLowerCase().trim());
+                this.setDataValue("email", email.toString().toLowerCase().trim());
             }
         },
         password_check: {
@@ -82,53 +85,53 @@ module.exports = function (sequelize, DataTypes) {
         password: {
             type: DataTypes.STRING,
             get: function () {
-                return this.getDataValue('password');
+                return this.getDataValue("password");
             },
             set: function (password) {
                 var hashedPassword = bcrypt.hashSync(password.trim());
-                this.setDataValue('password_check', password);
-                this.setDataValue('password', hashedPassword);
+                this.setDataValue("password_check", password);
+                this.setDataValue("password", hashedPassword);
             }
         }
     }, {
         timestamps: true,
         underscored: true,
-        tableName: 'users',
+        tableName: "users",
         classMethods: {
             associate: function (models) {
                 User.hasMany(models.Snap, {
-                    as: 'sentSnaps',
-                    foreignKey: 'user_id'
+                    as: "sentSnaps",
+                    foreignKey: "user_id"
                 });
                 User.belongsToMany(models.Snap, {
-                    as: 'receivedSnaps',
+                    as: "receivedSnaps",
                     through: {
                         model: models.SnapsReceivers,
-                        attributes: ['viewed']
+                        attributes: ["viewed"]
                     },
-                    foreignKey: 'user_id',
-                    otherKey: 'snap_id'
+                    foreignKey: "user_id",
+                    otherKey: "snap_id"
                 });
                 User.belongsToMany(models.User, {
                     as: {
-                        singular: 'friendWith',
-                        plural: 'friendsWith'
+                        singular: "friendWith",
+                        plural: "friendsWith"
                     },
                     through: {
                         model: models.Friends,
-                        attributes: ['validated']
+                        attributes: ["validated"]
                     },
-                    foreignKey: 'user_id',
-                    otherKey: 'friend_id'
+                    foreignKey: "user_id",
+                    otherKey: "friend_id"
                 });
                 User.belongsToMany(models.User, {
-                    as: 'withFriends',
+                    as: "withFriends",
                     through: {
                         model: models.Friends,
-                        attributes: ['validated']
+                        attributes: ["validated"]
                     },
-                    foreignKey: 'friend_id',
-                    otherKey: 'user_id'
+                    foreignKey: "friend_id",
+                    otherKey: "user_id"
                 });
             },
             isFriendWith: function (user, maybeFriend) {
@@ -138,12 +141,12 @@ module.exports = function (sequelize, DataTypes) {
                     User.findOne({
                         include: [{
                             model: User,
-                            as: 'withFriends',
+                            as: "withFriends",
                             where: {
                                 id: maybeFriend.id
                             },
                             through: {
-                                attributes: ['validated']
+                                attributes: ["validated"]
                             }
                         }],
                         where: {
@@ -164,12 +167,12 @@ module.exports = function (sequelize, DataTypes) {
                     User.findOne({
                         include: [{
                             model: User,
-                            as: 'friendsWith',
+                            as: "friendsWith",
                             where: {
                                 id: maybeFriend.id
                             },
                             through: {
-                                attributes: ['validated']
+                                attributes: ["validated"]
                             }
                         }],
                         where: {
@@ -201,14 +204,14 @@ module.exports = function (sequelize, DataTypes) {
                         User.findOne({
                             include: [{
                                 model: User,
-                                as: 'withFriends',
+                                as: "withFriends",
                                 through: {
                                     where: {
                                         validated: true
                                     },
                                     attributes: []
                                 },
-                                attributes: ['id', 'username', 'email']
+                                attributes: ["id", "username", "email"]
                             }],
                             where: {
                                 id: self.id
@@ -228,14 +231,14 @@ module.exports = function (sequelize, DataTypes) {
                         User.findOne({
                             include: [{
                                 model: User,
-                                as: 'friendsWith',
+                                as: "friendsWith",
                                 through: {
                                     where: {
                                         validated: true
                                     },
                                     attributes: []
                                 },
-                                attributes: ['id', 'username', 'email']
+                                attributes: ["id", "username", "email"]
                             }],
                             where: {
                                 id: self.id
